@@ -1,0 +1,1186 @@
+*********Baic commands********
+1. sudo -i => switch to root user
+2. pwd => present working director
+3. whoami => current user
+4. w or who or users => to check the currnt logged in users and from which ip-address they connected
+5. cd => change to home directory
+6. cd .. => change to behind directory
+7. cd ../.. => change to 2 behind directories
+8. cd /path => to change directory to the provided path 
+9. clear or control + l => to clear the screen
+10. exit or control + d => to exit from current user
+11. su - user_name => to switch user
+12. ifconfig or ip a => to check the private ip
+13. curl ifconfig.me => to check the public ip
+14. hostname name and sudo -i => to give host a name temporary
+15. hostnamectl set-hostname name and sudo -i => to give host a name permanently
+16. ping website_name => to connect websites or to check internet connection
+17. man command_name => to know about the command
+18. command_name --help => same as man command but with less information
+19. ssh user_name@host(IP/Domain_name) => to connect the host as user, using protocol(TCP/IP) and port(22) (ssh => Secure Shell)
+20. ssh -p port user_name@host => port to connect to on the remote host
+21. ssh-keygen => for generating private and public keys
+22. ssh -i key_file user_name@public_ip
+23. scp /path/of/the/file vidu@x.x.x.x:/path/of/the/directory/that/the/file/should/be/copied => secure copy is used to copy file(s) between servers in a secure way
+Example: scp /root/vidu.jpg 172.31.37.95:/tmp
+24. scp -P port /path/of/the/file vidu@202.x.x.x:/path/of/the/directory/that/the/file/should/be/copied => usually, SCP is using port 22 as a default port. But for security reason, you can change the port into another port
+Example: scp -P 2249 Label.pdf vidu@202.x.x.x:.
+25. dig dns => dig is a flexible tool for interrogating DNS name servers. It performs DNS lookups and displays the answers that are returned from the name server(s) that were queried. Most DNS administrators use dig to troubleshoot DNS problems because of its flexibility, ease of use and clarity of output. Other lookup tools tend to have less functionality than dig
+26. history
+
+********Date,time and calander********
+1. date
+2. uptime
+3. timedatectl
+4. cal
+********User and group commands********
+cat /etc/passwd or cat /etc/passwd | grep user_name
+cat /etc/group
+cat /etc/shadow
+cat /etc/login.defs
+cat /etc/gshadow
+
+1. useradd user_name => to add new user
+2. passwd user_name => to change password of user
+3. id user_name => to check the user id
+4. userdel user_name => to delete the user
+5. chage -l user_name => to check account details of user
+6. usermod -u user_id user_name => to change user id
+7. usermod -e 2020-05-29 user_name => to change the expiry date of a user
+8. usermod -d /home/directory_name user_name => to change user home directory
+9. (***don't use this command) usermod -l new_user_name old_user_name => to change the user login name only, it won't change anything else like home directory, id, gid, group_name,...
+10. usermod -g  new_group_name old_group_name => to change the primary group for a User
+11. usermod -aG group_name_that_you_want_to_add group_name => to add a supplementary groups
+12. usermod -L user_name => to lock the user account. This will lock the password so we can’t use the account
+13. usermod -U user_name => to unlock the user account
+14. usermod -s /bin/sh user_name => to change the user shell
+15. usermod -u 666 -g 777 user_name => ti change UID and GID of a User
+16. groupadd group_name
+17. groupmod -g group_id group_name => to change the group id
+18. groupmod -n group_new group_old
+
+Q. How to provide login access for users
+Ans. open sshd_config file using command "vi /etc/ssh/sshd_conf", edit it by changing passwordAuthentication no to yes then restart it by using command "systemctl restart sshd"
+
+Q. How to provide sudo access to user
+Ans. open sudoers file using command "vi /etc/sudoers", add "user_name	ALL=(ALL)	ALL"
+
+Q. How to provide password less sudo access to user
+Ans. open sudoers file using command "vi /etc/sudoers", add "user_name	ALL=(ALL)	NOPASSWD: ALL"
+
+Q. How to provide sudo access for specific commands to a user
+Ans.
+Step:1:- Find the path of the specific command that we want to provide sudo access to a user by using "which" command like,
+# which useradd
+/sbin/useradd
+step:2:- Copy the path like "/sbin/useradd"
+step:3:- Goto "sudoers" file and add the following command,
+vidu	ALL=(ALL)	/sbin/useradd
+
+*********Ownership and permissions********
+# ls -l
+drwxr-xr-x 6 root root        99 Aug 13 12:15 apache-maven-3.3.1
+-rw-r--r-- 1 vidu vidu        18 Aug 29 18:40 file1
+
+Here,
+a. "drwxr-xr-x" is called permission field
+b. "d" represents directory
+c. "-" represents file
+d. "r" means read permission, and has number '4'
+e. "w" means write permission, and has number '2'
+f. "x" means execute permission, and has number '1'
+g. "drwxr-xr-x", in this first three fields i.e "rwx" represents owner permissions, next three fields i.e "r-x" represents group ownership permissions and the last there fields i.e "r-x" represents all other users permissions
+f. "root root", the first name represents "owner" and the second name represents "group"
+
+1. chmod 777 file_or_directory_name => to provide r,w,x permissions to all users
+2. chmod +x file_name => to provide execute permissions to all users
+3. chmod -x file_name => to remove execute permissions of all users
+4. chown user_name file_or_dir_name => to change the owner of the file/directory
+5. chgrp group_name file_or_dir_name => to change the group ownership of the file/directory
+
+********os, kernal, cpu, ram and disk*********
+1. free -m (in mb) or cat /etc/proc/meminfo => to check RAM
+2. lscpu => to check or list cpu
+3. lsblk => to list disks or block storages
+4. df -hm => to check disk information
+5. du -ah => to check the disk usage information
+6. cat /etc/os-release => to check the OS information
+7. cd /boot and ls or uname -a or uname -r => to check kernal version
+8. mkfs.ext4 /dev/xvdf => to format the disk
+9. mount /dev/xvdf /app => to mount/map the disk to a directory/folder
+
+********creating, editing, copying, moving and deleting files and directories********
+1. touch file_name1 file_name2 ... => to create files
+2. cat file_name => to print the content of the file
+3. cat > file_name => it create a file if not present, to write the data and if there is any data present in the file then it overwrite the present data with new data
+4. cat >> file_name => same as before but instead of overwriting it will append the new data to existing data
+5.
+cat <<EOF> vidu_intro
+Hi
+This is vidu
+I am from Mahabubnagar Dist
+I passed out my btech in 2020 December in Vardhaman collage of engineering in ECE stream
+Post my btech I got trained on DevOps and Cloud
+I am familiar with cloud like Micrisoft Azure and AWS
+I am good with bash language for scripting in linux and yaml language for configuration management
+I am familiar with devops tools like git, jenkins, azure devops, terraform, arm templates, ansible, docker and k8s
+EOF
+6. vi file_name => to create file if not present and to edit the file by going inside the file. There are three modes of operation,
+
+a. Escape mode(default mode)
+i) G - curser will goto the last line
+ii) gg - curser will goto the first line, 5gg - curser will goto the 5th line
+iii) yy - copy the current line, 5yy - copy 5 lines from the current line
+iv) p - to paste the copied content below the current line, 5p - to paste the copied content below the current line five times
+v) dd - to delete the current line, 5dd - to delete the 5 lines from the current line
+vi) u - to undo
+vii) control + r - to redo
+
+b. Insert mode
+i) i or I
+ii) a
+iii) A
+iv) o
+V) O
+
+c. Command mode
+i) :wq! - w(save), q(quit), and !(forcefully)
+ii) :q
+iii) :wq
+iv) :q!
+v) :se nu - to list the line numbers
+vi) :se nonu - to remove the line numbers
+
+7. rm -rf file_name => remove file r(recursively) and f(forcefully)
+8. mkdir directory_name1 directory_name2 .... => to create the directories
+9. rm -rf dirctory_name => to remove directory with it contents
+10. ls => to list the content of the present working directory
+11. ls -l => same with permissions
+12. ls -a => to list the hidden files and directories
+13. ls -h => human readable
+14. ls -r => reverse
+15. cp file1 file2 => to copy content from file1 to file2
+16. mv file1 vidu => to rename file1 as vidu or to move from one place to another
+
+*********Managing applicaions and services************
+1. yum install application_name -y => ti install the provided application
+2. rpm -qa | grep appliation_name => to check wether the application is present or not
+3. yum remove -y packages => to remove the application
+4. which application_name/command_name => Which takes one or more arguments. For each of its arguments it prints to stdout the full path of the executables that would have been executed when this argument had been entered at the shell prompt. It does this by searching for an executable or script in the directories listed in the environment variable PATH using the same algorithm as bash(1)
+5. whereis application_name/command_name => whereis  locates  the  binary,  source and manual files for the specified command names. The supplied names are first stripped of leading pathname components and  any  (single)  trailing extension  of  the  form  .ext (for example: .c) Prefixes of s.  resulting from use of source code control are also dealt with.  whereis then attempts to locate the desired program in the standard Linux places, and in the places specified by $PATH and $MANPATH
+6. curl URL => curl is a tool for transfering data from or to a server. It supports these protocols: DICT, FILE, FTP, FTPS, GOPHER, GOPHERS, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, MQTT, POP3, POP3S, RTMP, RTMPS, RTSP, SCP, SFTP, SMB, SMBS, SMTP, SMTPS, TELNET or TFTP. The command is designed to work without user interaction. curl offers a busload of useful tricks like proxy support, user authentication, FTP upload, HTTP post, SSL connections, cookies, file transfer resume and more
+a. -o => saves the downloaded file on the local machine with the name provided in the parameters
+Example: curl -o hello.zip ftp://speedtest.tele2.net/1MB.zip
+b. -O => this option downloads the file and saves it with the same name as in the URL
+Example: curl -O ftp://speedtest.tele2.net/1MB.zip
+c. -C => this option resumes download which has been stopped due to some reason
+d. -u => curl also provides options to download files from user authenticated FTP servers
+Syntax: curl -u username:password URL
+Example: curl -u demo:password -O ftp://test.rebex.net/readme.txt
+7. wget URL => GNU Wget is a free utility for non-interactive download of files from the Web. It supports HTTP, HTTPS, and FTP protocols, as well as retrieval through HTTP proxies
+a. -c => this option is used to resume a partially downloaded file if the resume capability of the file is yes otherwise the downloading of the file cannot be resume if the resume capability of the given file is no or not specified
+b. -r => this option is used to turn on the recursive retrieving of the link specified in case of fatal errors also. This option is a recursive call to the given link in the command line
+8. tar cvf file.tar *.c => this command creates a tar file called file.tar which is the Archive of all .c files in current directory
+9. tar xvf file.tar => this command extracts files from Archives
+10. tar cvzf file.tar.gz *.c => gzip compression on the tar Archive, using option -z, this command creates a tar file called file.tar.gz which is the Archive of .c files
+11. tar xvzf file.tar.gz => extracting a gzip tar Archive *.tar.gz using option -xvzf, this command extracts files from tar archived file.tar.gz files
+12. zip [options] zipfile.zip files_list => ZIP is a compression and file packaging utility for Unix. Each file is stored in single .zip {.zip-filename} file with the extension .zip
+13. unzip myfile.zip => Unzip will list, test, or extract files from a ZIP archive
+14. systemctl status service_name
+15. systemctl start service_name
+16. systemctl stop service_name
+17. systemctl restart service name
+18. systemctl enable service_name
+19. ps -ef => task manager or to check the processes
+20. top => same as before but more enhanced
+In top,
+a. M - memory order
+b. P - cpu order
+c. U -user wise
+d. control + c - to get out
+21. kill -9 pid => to kill/stop the process
+
+**************Text Processing tools for shell scripting***************
+********find********
+**Description**
+*This command is used to find files and directories based on location, format, ownership, permission, size and time
+**Syntax**
+find [where to start searching from] [expression determines what to find] [-options] [what to find]
+**Examples**
+1. find / -name file_name/directory_name => to find files/directories using name in base directory
+2. find . -name file_name/directory_name => in current directory
+3. find / -iname file_name/directory_name => ignoring case
+4. find / -name *.sh => to find all files with .sh extention
+5. find / -name httpd -type f => to find all httpd files
+6. find / -name httpd -type d => to find all httpd directories
+7. find / -user user_name -name file_name/directory_name => to find files/directories belongs to provided user
+8. find / -group group_name
+9. find / -empty => to find all empty files and directories
+10. find / -type f -perm 755
+11. find / -type f -name "*.txt" -exec rm -f {} \; => to find and remove all files with .txt extension
+12. find / -mtime -2 -type f => to find all files that are modified in last 2 days
+13. find / -atime -2 -type f => to find all files that are accessed in last 2 days
+14. find / -size -10M => to find all files that are <10mb in size
+15. find / -size +5M -size -10M => files >5mb and <10mb in size
+16. find / -type f -newermt 2022-01-25 ! -newermt 2022-02-31 => to find files modified in between Jan 25 and Jan 31
+
+********grep********
+**Description**
+*grep is used to filter the keyword/pattern from any file/output_of_any_command
+*grep stands for global search for regular expression and print out
+**Syntax**
+grep options pattern file_name
+**Options**
+-c => prints only a count of the lines that match the pattern
+-h => displays the matched lines
+-i => ignores case fir matching
+-l => displays list of a filenames only
+-n => displays the matched lines and their line numbers
+*-v => prints all the lines that do not matches the pattern
+-w => match exact whole word
+-o => prints only the matched parts of a matching line
+-A n => prints searched line and n lines after the result
+-B n => before result
+-C n => after and before the result
+-E => treats pattern as an extended regular expression(ERE)
+**Examples**
+1. grep -n keyword file_name => to find line numbers of the keyword
+2. grep -o keyword file_name|wc -w => to find how many occurrences of the keyword
+3. grep -l amar /app/* or grep -l amar /app/file* => lets say in /app directory, I have file1 to file100. In some of the files I have amar keyword. To find the list of files that contain amar keyword
+4. cat file_name| head -n 30|tail -n 20 | grep keyword => lets say I have a file with 100 lines, to search the keyword in between 10 to 30 lines
+5. ls -l |grep ^- or ls -l |grep -v ^d => to list only files in current directory
+6. cat /etc/os-release|grep -e ^NAME -w -e ^VERSION
+
+********head********
+**Description**
+*prints the top n number of data of the given input. By default, it prints the first 10 lines
+**Syntax**
+head options file_name
+**Options**
+-n num => prints the first "num" lines
+-c num => prints the first "num" bytes
+-q => it is used if more than one file is given
+-v => data from the specified file is always preceded by its filename
+**Examples:
+Q) How to exclude last two lines
+Ans.
+step:1: find the number of lines in that file using command: 
+x=`cat file_name|wc -l`
+step:2: cat file_name|head -n `expr $x - 2`
+
+********tail********
+**Description**
+*it is complementory of head command. Prints the last n number of data of the given input
+**Syntax**
+tail options file_name
+**Options**
+-n num => prints the last "num" lines
+-c num => prints the last "num" bytes
+-q => it is used if more than one file is given
+-v => data from the specified file is always preceded by its filename
+-f => This option is mainly used by system administration to monitor the growth of the log files written by many Unix program as they are running. This option shows the last ten lines of a file and will update when new lines are added
++n => data will start printing from the number n till the end of the file specified
+**Examples**
+1. tail +n file_name
+2. tail -f logfile
+
+********echo********
+**Description**
+*echo is used to display line of text/string that are passed as an argument passed as an argument
+**Syntax**
+echo options string
+**Options**
+-n => do not print the trailing newline
+-e => enable interpretation of backslash escapes
+**Backslash escapes**
+\\ => backslash
+\b => backspace
+\n => newline
+\r => carriage return
+\t => horizontal tab
+\v => vertical tab
+\c
+\a
+**Examples**
+1. echo this is vidu
+2. echo $PATH => to display the value of PATH environmental/system variable
+3.
+x=10
+echo the value of x is $x
+4. echo -e "This \bis \bvidu"
+5. echo -e 'This \ris \rvidu'
+6. echo "Test page" > test.txt
+
+********sort********
+**Description**
+*sort command is used to sort a file, arranging the records in a particular order. By default, the sort command sorts file assuming the contents are ASCII
+**Syntax**
+sort options file_name
+**Options** 
+-o => its functionality is same as redirecting the output to a file => sort -o new_file old_file (or) sort old_file > new_file
+-n => it is used to sort a file numerically in accending order => sort -n file_name
+-r => it is used to sort a file in reverse order => sort -r file_name (reverse of alphabetical order), sort -nr file_name (reverse of accending order)
+-k => is used to sort a certain column => sort -k 2 file_name (or) sort -k2 file_name (sort 2nd column in alphabetical order), sort -k 2n file_name (or) sort -nk2 file_name (sort 2nd column in numerical order)
+-c => it is used to check if the file given is sorted or not, shows no o/p if it is already sorted, shows the lines which are out of order if not sorted
+-u => sorts and removes duplicates
+-M => sorts in months order
+-t => use SEP instead of non-blank to blank transition
+**Examples**
+1. sort -u file1 file2
+2. ls -l|sort -t "," -nk2,5 -k9
+
+
+********uniq********
+
+
+********wc********
+**Description**
+*wc stands for word count
+*it is used to find out number of lines, word count, byte, and characters count in the file
+*by default, it displays four-column output
+**Syntax**
+wc options file_name
+**Options**
+-l => prints the number of lines in file
+-w => prints the number of words
+-c => prints the number of bytes
+-m => prints the number of characters
+-L => prints the length of longest(no.of characters) line in a file
+
+
+********xargs********
+
+
+********sed********
+**Description**
+*sed command stands stream editor
+*sed command can perform lots of functions on file like searching, replacing, inserting, and deleting
+*sed command supports regular expressions which allows it to perform complex pattern matching
+
+1. Replacing or substituting string:
+1.1. sed 's/vidu/mona/' file_name
+Here,
+"s" => specifies the substitution operation
+"/" => are delimiters
+"vidu" => is the search pattern
+"mona" => is the replacement string
+by default, the sed command replaces the first occurrence of the pattern in each line and it won't replace the second, third,... occurrences in the line
+1.2. sed 's/vidu/mona/2' file_name => replace second occurrence in every line
+1.3. sed 's/vidu/mona/gi' file_name => replace globally and ignorecase
+1.4. sed 's/vidu/mona/3g' file_name => replace globally but from 3rd occurrence in line
+1.5. sed '3 s/vidu/mona/' file_name => replace only on the third lines first occurrence
+1.6. sed '1,3 s/vidu/mona/' file_name => replace from range of line 1-3, i.e, lines 1,2,3
+1.7. sed '2,$ s/vidu/mona/' file_name => replace from range of line 2-last line
+1.8. sed 's/[Zz]ip/rar/g' file_name => replace zip or Zip with rar 
+
+2. Deleting lines:
+2.1. sed '5d' file_name => deleting 5th line
+2.2. sed '$d' file_name => deleting last line
+2.3. sed '3,6d' file_name => deleting 3-6 lines, i.e, 3,4,5,6
+2.4. sed '12,$d' file_name => deleting deleting from 12th line to last line
+2.5. sed '/pattern/d' file_name => deleting pattern matching line
+2.6. sed '/^$/d' file_name => deleting black lines
+2.7. sed '/^#/d;/^$/d' file_name => deleting lines those begins with # and those empty lines
+2.8. sed '/^#\|^$\|*#/d' httpd.conf => the caret sign followed by the number sigh(^#) indicates the beginning of the line, whereas '^$' represents blank lines. The vertical bars indicates boolean operations, whereas the backward slash is used to escape vertical bars
+
+3. View/print the lines:
+3.1. sed -n '2,5p' file_name (or) '2,5'p => view the lines from 2 to 5
+3.2. sed -n '4'p file_name => view the 4th line
+3.3. sed -n /vidu/p file_name => print the line which matches the pattern
+3.4. sed -n '/vidu/,5p' file_name => lets say 3rd line matches the pattern, so it prints from 3rd line to 5th line
+3.5. sed -n '1,/vidu/p' file_name => it prints from first line to pattern matching line
+3.6. sed -n -e '5,7p' -e '10,13p' file_name => -e means execute
+
+4. Inserting blank lines:
+4.1. sed G file_name => insert one blank line after each line
+4.2. sed 'G:G' file_name => insert two black lines
+4.3. sed '/cute/G' file_name => insert a blank line below every line which matches pattern "cute"
+4.4. sed '/cute/{x;p;x;}' file_name => insert a blank line above every line which matches pattern "cute"
+
+5. Updating file after modification:
+5.1. sed -i 's/vidu/mona/g' file_name
+
+Q) How to delete empty lines using sed command?
+Ans. sed '/^$/d' file_name
+
+Q) In a file suppose there is a line that contains both amar and pradeep keywords, only in that line we should replace pradeep to amar?
+Ans. sed '/amar/ s/pradeep/amar/g' file_name => searches for the line that contains pattern 'amar' and performs replace operation
+
+Q) How to delete numbers and point(.) in output?
+Ans. output|sed 's/[0-9,.]//g'
+
+
+********tr********
+**Definition**
+*The tr command is used for translating or deleting characters
+**Syntax**
+tr options set1 set2
+**Options**
+-c => complements the set of characters in strings
+-d => delete characters in the first set from the output
+-s => replaces repeated characters listed in set1 with single occurrence
+-t => truncates set1
+
+Q) How to convert lowercase to uppercase
+Ans. 
+cat file_name|tr [a-z] [A-Z] or
+cat file_name|tr [:lower:] [:upper:]
+
+Q) Translate whitespace to tabs
+Ans. echo this is vidu|tr [:space:] '\t'
+
+Q) Translate braces to parenthesis
+Ans. echo {welcome}|tr '{}' '()'
+
+Q) How to use squeeze repetition of characters using tr
+Ans. 
+echo -e "this\tis\tvidu" |tr -s [:space:] ' '
+echo www.tecmint...............com |tr -s '.'
+
+Q) Delete specific characters in output/file
+Ans. echo this is vidu | tr -d 'i','s' (or) 'is' (or) 'i,s'
+
+Q) To remove all the numbers from the string
+Ans. echo my id is 730 |tr -d [:digit:]
+
+Q) How to complement the sets using -c option
+Ans. 
+echo my id is 730 |tr -d 'a-zA-Z ' => without -c
+echo my id is 730|tr -cd [:digit:]
+
+
+********awk********
+**Definition**
+*awk is a scripting language used for manipulating data generating reports
+*The awk command programming language requires no compiling and allows the user to use variables, numeric functions, string functions, and logical functions
+*awk is mostly used for pattern scanning and processing
+**awk operations**
+a. scans a file line by line
+b. splits each input lines into fields
+c. compares input line/fields to pattern
+d. performs action(s) on matched lines
+**useful for**
+a. transform data files
+b. produce formatted reports
+**Syntax**
+awk options 'selection_criteria {action}' file_name
+**options/flags**
+-f program_file => reads the awk program source from the file(program_file), instead of from the first command line argument
+-F fs => use fs for the input field separator
+**Spliting a line into fields**
+For each record i.e line, the awk command splits the record delimited by whitespace character by default and stores it in the $n variables. If the line has 4 words, it will be stored in $1, $2, $3, and $4 respectively. Also, $0 represents the whole line.
+**Built-in variables in awk**
+awk's built-in variables include the field variables - $1, $2, $3, and so on($0 is the entire line) that break a line of text into individual words or pieces called fields.
+1. NR:
+NR variable keeps the current count of the number of input records. Remember that records are usually lines. awk command performs the pattern/action statements once for each record in a file.
+2. FS:
+FS variable contains the field separator character which is used to divide fields on the input line. The default is 'whitespace', meaning space and tab characters. FS can be reassigned to another character (typically in BEGIN) to change the field separator.
+3. RS:
+RS command stores the current record separator character. Since, by default, an input line is the input record, the default record separator character is a newline.
+4. OFS:
+OFS command stores the output field separator, which separates the fields when Awk prints them. The default is a blank space. Whenever print has several parameters separated with commas, it will print the value of OFS in between each parameter   
+5. ORS:
+ORS command stores the output record separator, which separates the output lines when Awk prints them. The default is a newline character. print automatically outputs the contents of ORS at the end of whatever it is given to print
+
+**Examples**
+1. awk '{print}' file_name => default behavior => prints entire file
+2. awk '/pattern/ {print}' file_name => prints the lines which match the given pattern
+3. awk '{print NR,$0}' file_name (or) awk '{print NR": "$0}' file_name
+4. free -m|grep Mem|awk -F ' ' '{print $7}' (or) free -m|grep Mem|awk '{print $7}'
+5. uname -a|awk '{print $3}'|awk -F '.' '{print $5}'|awk -F '2' '{print $1}'
+6. df -h /|grep /|awk '{print $4}' |tr -d [M,G]
+7. cat /etc/passwd|awk -F ':' '{print $1,"home directory is",$6}'
+8. awk '{print NF,$NF}' file_name
+9. awk 'NR==3,NR==6 {print NR,$0}' file_name
+10. awk '{print NR "- " $1}' file_name
+11. awk 'NF<=0 {print NR}' file_name (or) awk 'NF <= 0 {print NR}' file_name (or) awk 'NF==0 {print NR}' file_name => to print empty lines number
+12. awk '{if(length($0)>max) max=length($0)} END {print max}' file_name => to print the length of the longest line
+13. awk 'END {print NR}' file_name => count the lines in file
+14. awk 'length($0)>10' file_name (or) awk '{if(length($0)>10) print $0}' file_name => to print lines with more than 25 characters
+15. awk '{if($3=="sring") print $0}' file_name => to find/check for any string in any specific column
+16. awk 'BEGIN {for(i=1;i<=6;i++) print "square of", i, "is",i*i;}'
+
+  
+********shell********
+* The shell can be defined as a command interpreter within an operating system like Linux/GNU or Unix. It is a program that runs other programs. The shell facilitates every user of the computer as an interface to the Unix/GNU Linux system. Hence, the user can execute different tools/utilities or commands with a few input data.
+* The shell sends the result to the user over the screen when it has completed running a program which is the common output device. That's why it is known as "command interpreter".
+* The shell is not just a command interpreter. Also, the shell is a programming language with complete constructs of a programming language such as functions, variables, loops, conditional execution, and many others.
+* For every user, apart from username and password, we need a shell also, without shell no user can login.
+* Shell like bash, is a rpm package that is already installed.
+* There are different types of shells like,
+1. bash(Bourne Again Shell) shell
+2. c shell
+3. k shell
+we can download any shell, if we want to.
+* Shell will take input(stdin) from the user and send it to kernel. Kernel will process input and sends output(stdout) again to shell.
+* To see all user details, we should open passwd file i.e.,
+cat /etc/passwd (to read)
+vi /etc/passwd (to edit)
+-> At last, we can see /bin/bash(means user can login because it has bash shell) or /bin/false(means user cannot login because it has no shell).
+->We can change/apply shell(bash) by editing the file passwd like:
+step:1:- vi /etc/passwd
+step:2:- see the user that we want to add shell and change from /bin/false to /bin/bash
+
+
+********Input Output Redirection********
+* Rediection means directing the input or output.
+* Suppose we want to run a command called "date", if we run, it will print the output to current terminal screen. But our requirement is different, we don't want the output to be displayed on the terminal. We want the output to be saved in a file. This could be done very easily with output redirection.
+**Types of redirection**
+1. Overwrite
+-> '>' standard output
+-> '<' standard input
+2. Appends
+-> '>>' standard output
+-> '<<' standard input
+3. Merge
+-> 'p>&q' Merges output from stream p with stream q
+-> 'p<&q' Merges input from stream p with stream q
+**Examples**
+1.
+# cat file1
+vidu
+# tr [a-z] [A-Z] < file1 > file2
+# cat file2
+VIDU
+
+
+********stdin, stdout, and stderr********
+* Whenever running any command in the terminal, stdin, stderr, and stdout are three data streams that bash creates.
+* In computing, the term stream refers to something that can transfer data. Here, all three streams carry text as the data.
+* Similar to water streams, data streams also have two endpoints. There are a source and an outflow. Whatever command you’re running in the terminal will be at either point of the stream.
+**stdin**
+-> Stands for standard input.
+-> It takes text as input.
+**stdout**
+-> Stands for standard output.
+-> The text output of a command is stored in the stdout stream.
+**stderr**
+-> Stands for standard error.
+-> Whenever a command faces an error, the error message is stored in this stream.
+* In Linux, almost all the streams are treated as if they were files. Just like you can read/write a file, you can read/write data from these streams.
+* For stdin, stdout, and stderr there are unique values assigned to them,
+-> '0' for stdin
+-> '1' for stdout
+-> '2' for stderr
+**Examples**
+1. 
+# ls file2 file3
+ls: cannot access 'file3': No such file or directory (this is a stderr)
+file2 (this is a stdout)
+2.
+# ls file2 file3 > /tmp/out1 2> /tmp/out2 (here in "2>", 2 means stderr)
+# cat out1
+file2
+# cat out2
+ls: cannot access 'file3': No such file or directory
+3.
+# ls file2 file3 > /tmp/out3
+ls: cannot access 'file3': No such file or directory
+* if we don't want to see error(stderr), we can redirect it to null file present in /dev/null
+# ls file2 file3 > /tmp/out4 2> /dev/null
+# cat out4
+file2
+# cat /dev/null
+nothing
+5.
+# ls file2 file3 > out5 2>&1
+# cat out5
+ls: cannot access 'file3': No such file or directory
+file2
+Here, 2>&1 means that stderr redirects to the target of stdout. More formally, the error message generated by 2 gets merged with the current output 1.
+
+
+********Exit status of previous command********
+* "?" is a variable that holds the return value of the last executed command
+* To know the exit status of previous command, we can use command,
+# echo $?
+* If the output of "echo $?" is '0' means previous command is successful.
+* If the output of "echo $?" is 'non zero' means previous command is unsucessful.
+**Examples**
+1.
+# ls
+file1
+file2
+# echo $?
+0
+# ls|grep file3
+# echo $?
+1
+
+
+********Writing and executing scripts********
+**Examples**
+1.
+# vi script1.sh
+#!/bin/bash
+expr 1 + 2
+:wq
+# ls -l script1.sh
+-rw-r--r-- 1 root root     23 Aug 29  13:49  script1.sh
+=> As you can see execute permission is not given
+# ./script1.sh
+-bash: ./script1.sh: permission denied
+# chmod +x script1.sh
+# ls -l script1.sh
+-rwxr-xr-x 1 root root     23 Aug 29  13:49  script1.sh
+# ./script1.sh
+3
+
+**Note: expr command evaluates a given expression and displays output.
+
+2.
+# vi script2.sh
+#!/bin/bash
+expr 1 + 2
+expr 1 - 2
+expr 4 \* 2
+expr 4 / 2
+expr 4 % 3
+:wq
+# ls -l script2.sh
+-rw-r--r-- 1 root root     23 Aug 29  13:49  script2.sh
+# sh script2.sh
+3
+-1
+8
+2
+1
+# sh -x script2.sh (for debugging)
++ expr 1 + 2
+3
++ expr 1 - 2
+-2
++ expr 4 '*' 2
+8
++ expr 4 / 2
+2
++ expr 4 % 3
+1
+
+3.
+# vi expr.sh
+#!/bin/bash
+expr `echo vidu`
+expr `uname -a|awk '{print $3}'`
+expr vidu
+:wq
+
+
+********Variables********
+* Variable is a named memory location.
+* We have different types of variables.
+
+
+1. run time variables:
+# vi script3.sh
+#!/bin/bash
+echo provide value for a:
+read a
+echo provide value for b:
+read b
+expr $a + $b
+:wq
+# sh script3.sh
+provide value for a:
+5
+provide value for b:
+6
+11
+
+
+2. positional parameters:
+# vi script4.sh
+#!/bin/bash
+a=$1
+b=$2
+expr $a + $b
+#or
+expr $1 + $2
+:wq
+# sh script4.sh 4 5
+9
+9
+
+
+3. local variables:
+# vi script5.sh
+#!/bin/bash
+a=3
+b=4
+expr $a + $b
+:wq
+# sh script5.sh
+7
+
+
+4. output variables:
+# vi script6.sh
+#!/bin/bash
+a=`free -m|grep Mem|awk '{print $7}'`
+echo Available memory is $a
+:wq
+# sh script6.sh
+Available memory is 623
+
+**Note: if we want to assign a command to a variable, then that command should be inside back quotes(`).
+
+
+5. environment variables:
+-> There are three types of environmental variables.
+
+a. user variable:
+-> This variable is accessable and will be present in that perticular user
+-> To create a user variable, goto respected user home directory and add that variable to .bash_profile file like,
+[root@....]# su - vidu
+[vidu@....]$ pwd
+/home/vidu
+[vidu@....]$ ls -a
+. .. .bash_logout .bash_profile .bashrc
+[vidu@....]$ vi .bash_profile
+.
+.
+.
+a=5
+b=10
+c=8
+export a b
+:wq
+[vidu@....]$ echo $a $b $c
+
+[vidu@....]$ source .bash_profile
+[vidu@....]$ echo $a $b $c
+5 10 8
+[vidu@....]$ env
+.
+.
+.
+a=5
+b=10
+.
+.
+[vidu@....]$
+=> As you can see there is no 'c' variable, because we havent exported it.
+[vidu@....]$ exit
+[root@....]# echo $a $b $c
+**Note: Lets say you have changed the values of variables using export command, when you logout or restart or reboot, the changes will be gone,
+[vidu@....]$ echo $a $b $c
+5 10 8
+[vidu@....]$ export a=6 b=11
+[vidu@....]$ echo $a $b
+6 11
+[vidu@....]$ exit
+logout
+[root@....]# su - vidu
+Last login: Mon Oct 31 17:27:17 UTC 2022 on pts/0
+[vidu@....]$ echo $a $b
+1 2
+[vidu@....]$
+
+b. global variable:
+-> To create a global variable, goto /etc/profile file and add your variable.(You shouls be root user because of permissions)
+[root@....]# vi /etc/profile
+.
+.
+.
+a=100
+export a
+:wq
+[root@....]# source /etc/profile
+[root@....]# echo $a
+100
+[root@....]# su - vidu
+[vidu@....]$ echo $a
+5 => beacuse there is user variable "a=5" in /home/vidu/.bash_profile file
+[vidu@....]$ exit
+logout
+[root@....]# su - mona
+[mona@....]$ echo $a
+100
+
+c. system variable:
+-> ststem variables means pre-defined variables
+-> You can see system variables using variables using command: env
+[root@....]# env
+.......
+[root@....]# echo $SHELL
+/bin/bash
+
+Q) How to add/append new path to PATH system variable
+[root@....]# export PATH=$PATH:/new/path
+
+
+*********Conditional Statements********
+-> There are total of 5 conditional statements which can be used in bash programming.
+
+1. if statement:
+* This block will process if specified condition/expression is true.
+* Syntax:
+if [ expression ]
+then
+	statement
+fi
+
+2. if-else:
+* If specified condition is not true in if part then else part will be executed.
+* Syntax:
+if [ expression ]
+then
+	statement
+else
+	statement
+fi
+
+3. if...elif...else...if(Else if ladder):
+* To use multiple conditions in one if-else block, then elif keyword is used in shell. If expression1 is true then it executes statement1 and statement2. If none of the conditions is true then it processes else part.
+* Syntax:
+if [ expression1 ]
+then
+	statement1
+	statement2
+elif [ expression2 ]
+then
+	statement3
+	statement4
+else
+	statement5
+fi
+
+4. Nested if:
+* Nested if-else block can be used when, one condition is satisfies then it again checks another condition.
+* Example:
+if [ expression1 ]
+then
+	statement1
+	statement2
+else
+	if [ expression2 ]
+	then
+		statement3
+		statement4
+	else
+		statement5
+		statement6
+	fi
+fi
+
+5. case(switch):
+* case statement works as a switch statement, if specified value match with the pattern then it will execute a block of the associated statements untill the double semicolon(;;) is executed.
+* if there is no match, the exit status of the case is zero.
+* Syntax:
+case pattern in
+   pattern1)
+      Statement(s) to be executed if pattern1 matches
+      ;;
+   pattern2)
+      Statement(s) to be executed if pattern2 matches
+      ;;
+   pattern3)
+      Statement(s) to be executed if pattern3 matches
+      ;;
+   *)
+     Default condition to be executed
+     ;;
+esac
+* Example:
+#!/bin/bash
+
+FRUIT="kiwi"
+
+case "$FRUIT" in
+   "apple") echo "Apple pie is quite tasty." 
+   ;;
+   "banana") echo "I like banana nut bread." 
+   ;;
+   "kiwi") echo "New Zealand is famous for kiwi." 
+   ;;
+esac
+
+
+********Operators*********
+* There are 5 basic operators in bash/shell scripting.
+
+1. Arithmetic Operators:
+-> These operators are used to perform normal arithmetics/mathematical operations.
+-> Operators:
+'+' - addition
+'-' - subtraction
+'\*' - multiplication
+'/' - division
+'%' - modulus
+'=' - assignment
+'==' - equality check
+'!=' - not equality check
+
+2. Relational Operators:
+* Bourne Shell supports the following relational operators that are specific to numeric values. These operators do not work for string values.
+* Operators:
+'-eq' - equal to - [ $a -eq $b ]
+'-ne' - not equal to - [ $a -ne $b ]
+'-gt' - greater then - [ $a -gt $b ]
+'-lt' - less then - [ $a -lt $b ]
+'-ge' - greater than or equal to - [ $a -ge $b ]
+'-le' - less than or equal to - [ $a -le $b ]
+
+3. Boolean Operators:
+* Operators:
+'!' - this is logical negation. This inverts a true condition into false and vice versa - [ ! false ] is true
+'-o' - this is logical OR. If one of the operands is true, then the condition becomes true - [ $a -lt 20 -o $b -gt 100 ]
+'-a' - this is logical AND. If both the operands are true, then the condition becomes true otherwise false - [ $a -lt 20 -a $b -gt 100 ]
+
+4. String Operators:
+* Operators:
+'=' - equal to - [ $a = $b ]
+'!=' - not equal to - [ $a != $b ]
+'-z' - checks if the given string operand size is zero; if it is zero length, then it returns true - [ -z $a ]
+'-n' - checks if the given string operand size is non-zero; if it is nonzero length, then it returns true - [ -n $a ]
+'str' - checks if str is not the empty string; if it is empty, then it returns false - [ $a ]
+
+5. File Test Operators:
+* Operators:
+'-f' - checks if file is an ordinary file as opposed to a directory or special file; if yes, then the condition becomes true - [ -f $file ]
+'-r' - checks if file is readable; if yes, then the condition becomes true - [ -r $file ]
+'-w' - checks if file is writable; if yes, then the condition becomes true - [ -w $file ]
+'-x' - checks if file is executable; if yes, then the condition becomes true - [ -x $file ]
+'-s' - checks if file has size greater than 0; if yes, then condition becomes true - [ -s $file ]
+'-e' - checks if file exists; is true even if file is a directory but exists - [ -e $file ]
+
+
+********Looping Statements*********
+-> There are three looping statements:
+a. while
+b. for
+c. until
+
+-> To alter the flow of looping statement, two commands are used they are,
+a. break
+b. continue
+
+1. while:
+->  if command raise to false then loop will be terminated
+* Syntax:
+while [ expression/command/condition ]
+do
+	statement to be executed
+done
+* Example:
+1.
+a=0
+while [ $a -lt 10 ]
+do
+	echo $a
+	a=`expr $a + 1`
+done
+*o/p:
+0
+1
+2
+.
+.
+.
+8
+9
+
+2. for:
+-> The for loop operate on items. It repeats a set of commands for every item in a list.
+* Syntax:
+for var in word1 word2 .... wordn
+do
+	statements
+done
+* Example:
+1.
+for a in 1 2 3 4 5
+do
+	if [ $a == 3 ]
+	then
+		continue
+	fi
+	echo Iteration no $a
+done
+*o/p:
+Iteration no 1
+Iteration no 2
+Iteration no 4
+Iteration no 5
+
+2.
+for a in 1 2 3 4 5
+do
+	if [ $a == 3 ]
+	then
+		break
+	fi
+	echo Iteration no $a
+done
+*o/p:
+Iteration no 1
+Iteration no 2
+
+3.
+if [ -z $1 ]
+then
+	echo please provide positional parameters
+else
+	for i in `echo $*`
+	do
+		user_id=`cat /etc/passwd|grep -w ^$i|awk -F ':' '{print $3}'`
+		echo $i user id is $user_id
+	done
+fi
+*o/p:
+# sh script.sh
+please provide positional parameters
+# sh script.sh vidu mona root
+vidu user id is 1001
+mona user id is 1002
+root user id is 0
+
+3. until:
+-> The loop terminates when the command becomes true.
+* Syntax:
+until [ expression/command/condition ]
+do
+	statements
+done
+* Example:
+1.
+a=0
+until [ $a -gt 3 ]
+do
+	echo $a
+	a=`expr $a + 1`
+done
+*o/p:
+0
+1
+2
+3
+
+
+********colors in scripts*********
+You can use these ANSI escape codes:
+
+Black        0;30     Dark Gray     1;30
+Red          0;31     Light Red     1;31
+Green        0;32     Light Green   1;32
+Brown/Orange 0;33     Yellow        1;33
+Blue         0;34     Light Blue    1;34
+Purple       0;35     Light Purple  1;35
+Cyan         0;36     Light Cyan    1;36
+Light Gray   0;37     White         1;37
+
+echo -e "\033[1;36m Hello World\033[1;37m"
+
+tput setab [1-7] # Set the background colour using ANSI escape
+tput setaf [1-7] # Set the foreground colour using ANSI escape
+Colours are as follows:
+
+Num  Colour    #define         R G B
+
+0    black     COLOR_BLACK     0,0,0
+1    red       COLOR_RED       1,0,0
+2    green     COLOR_GREEN     0,1,0
+3    yellow    COLOR_YELLOW    1,1,0
+4    blue      COLOR_BLUE      0,0,1
+5    magenta   COLOR_MAGENTA   1,0,1
+6    cyan      COLOR_CYAN      0,1,1
+7    white     COLOR_WHITE     1,1,1
+
+tput sgr0    # Reset text format to the terminal's default
+
+echo "$(tput setaf 2)Hello, world$(tput sgr0)"
+
+* Another option is to use shell variables:
+red=`tput setaf 1`
+green=`tput setaf 2`
+reset=`tput sgr0`
+echo "${red}red text ${green}green text${reset}"
+tput produces character sequences that are interpreted by the terminal as having a special meaning. They will not be shown themselves. Note that they can still be saved into files or processed as input by programs other than the terminal.
+
+
+*******Script Examples*******
+1. if available memory is more than 1GB(1024MB) then echo something
+Ans.
+#!/bin/bash
+
+mem=`free -m|grep Mem|awk '{print $7}'`
+if [ $mem -gt 1024 ]
+then
+        echo available memory is greater than 1GB
+else
+        echo available memory is less than 1GB
+fi
+
+2. Find out the available memory and if it is more than 40% then echo something
+Ans.
+#!/bin/bash
+mem=`free -m|grep Mem|awk '{print $7}'`
+echo Available memory is $mem
+y=`expr $mem \* 100 / 1024`
+if [ $y -gt 40 ]
+then
+        echo available memory is greater than 40 percent
+else
+        echo available memory is less than 40 percent
+fi
+(or)
+#!/bin/bash
+free=`free -m|grep -i mem|awk '{print $7}'`
+total=`free -m|grep -i mem|awk '{print $2}'`
+percent=`expr $free\*100/$total|bc`
+# or percent=`expr $free \* 100 / $total`
+
+if [ $percent -gt 40 ]
+then
+        echo available RAM is greater than 40 percent
+else
+        echo available RAM is less than 40 percent
+fi
+
+
+3. In df -h / ,find out the available storage, convert into MB and if it is more than 1GB then echo something
+Ans.
+#!/bin/bash
+
+mem=`df -h /|grep dev|awk '{print $4}'|sed 's/[M,G]//g'`
+c=`df -h /|grep dev|awk '{print $4}'|sed 's/[0-9,.]//g'`
+#Conversion of GB/MB into MB
+if [ $c = G ]
+then
+        mb=`echo $mem \* 1024|bc|awk -F '.' '{print $1}'`
+else
+        mb=$mem
+fi
+
+echo -e "Available memory is $mb \bMB"
+
+if [ $mb -gt 1024 ]
+then
+        echo Available memory is greater than 1GB
+else
+        echo Available memory is less than 1GB
+fi
+
+
+4. Same as before but in %, find out the available storage,convert it and if it is more than 1GB then echo something
+5. I have shell script, only root should be able to run it(use whoami command)
+6. /app , /app1 , /app2 
+6.1) write a shell script to take folder name as positional paramater
+6.2) if i give any other folder except /app , /app1 , /app2  it should say, please provide correct folder name.
+6.3) find out the latest files and remove remaining all files?
+6.4) i may have sub folders also it should dlete all old files not directories?
+7. 
+/app
+
+f1 f2 f3 f4 f5 folder1/f6
+
+
+
+
+
+
+
+
+
+
+
